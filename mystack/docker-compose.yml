@@ -1,0 +1,31 @@
+version: '3' 
+services:
+  gitea_server:
+    image: gitea/gitea:1.20
+    ports:
+      - "3000:3000"
+      - "10022:22"
+    volumes:
+      - gitea_server_data:/data 
+    networks:
+      - gitea_network
+  gitea_db:
+    image: mysql:8
+    volumes:
+      - gitea_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=gitea
+    networks:
+      gitea_network:
+        aliases:
+          - mysql
+
+volumes:
+  gitea_server_data:
+    driver: local
+  gitea_db_data:
+    driver: local
+networks:
+  gitea_network:
+    driver: bridge
